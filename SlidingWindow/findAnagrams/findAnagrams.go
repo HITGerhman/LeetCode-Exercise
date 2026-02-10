@@ -8,17 +8,19 @@ import (
 )
 
 func findAnagrams(s string, p string) []int {
-	n, m := len(s), len(p)
-	if m > n {
+	sl := len(s)
+	pl := len(p)
+	if sl < pl {
 		return []int{}
+	}
+	var tar [26]int
+	var win [26]int
+	for i := 0; i < pl; i++ {
+		tar[p[i]-'a']++
+		win[s[i]-'a']++
 	}
 
 	res := make([]int, 0)
-	var need, win [26]int
-	for i := 0; i < m; i++ {
-		need[p[i]-'a']++
-		win[s[i]-'a']++
-	}
 	equal := func(a, b *[26]int) bool {
 		for i := 0; i < 26; i++ {
 			if a[i] != b[i] {
@@ -27,16 +29,14 @@ func findAnagrams(s string, p string) []int {
 		}
 		return true
 	}
-
-	if equal(&need, &win) {
+	if equal(&win, &tar) {
 		res = append(res, 0)
 	}
-	for r := m; r < n; r++ {
+	for r := pl; r < sl; r++ {
 		win[s[r]-'a']++
-		win[s[r-m]-'a']--
-
-		if equal(&need, &win) {
-			res = append(res, r-m+1)
+		win[s[r-pl]-'a']--
+		if equal(&win, &tar) {
+			res = append(res, r-pl+1)
 		}
 	}
 	return res
