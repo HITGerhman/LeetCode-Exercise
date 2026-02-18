@@ -8,19 +8,18 @@ import (
 )
 
 func mySqrt(x int) int {
-	if x == 1 || x == 0 {
+	if x == 0 || x == 1 {
 		return x
 	}
-	l, r := 1, x/2
-	ans := 0
-	for l <= r {
-		mid := l + (r-l)/2
-		if mid <= x/mid {
-			ans = mid
-			l = mid + 1
+	ans := 1
+	for i := 1; i < x; i++ {
+		if x/i >= i {
+			continue
 		} else {
-			r = mid - 1
+			ans = i - 1
+			break
 		}
+
 	}
 	return ans
 }
