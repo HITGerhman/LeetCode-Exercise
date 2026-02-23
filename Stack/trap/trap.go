@@ -8,21 +8,27 @@ import (
 )
 
 func trap(height []int) int {
-	l, r := 0, len(height)-1
-	leftMax, rightMax := 0, 0
+	n := len(height)
+	if n == 0 {
+		return 0
+	}
+	l, r := 0, n-1
+	maxLeft, maxRight := 0, 0
 	ans := 0
 	for l < r {
 		if height[l] < height[r] {
-			if height[l] > leftMax {
-				leftMax = height[l]
+			if height[l] >= maxLeft {
+				maxLeft = height[l]
+			} else {
+				ans += maxLeft - height[l]
 			}
-			ans += leftMax - height[l]
 			l++
 		} else {
-			if height[r] > rightMax {
-				rightMax = height[r]
+			if height[r] >= maxRight {
+				maxRight = height[r]
+			} else {
+				ans += maxRight - height[r]
 			}
-			ans += rightMax - height[r]
 			r--
 		}
 	}
