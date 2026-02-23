@@ -10,25 +10,19 @@ import (
 
 func maxSlidingWindow(nums []int, k int) []int {
 	n := len(nums)
-	if n == 0 || k <= 0 {
+	if n < k {
 		return []int{}
 	}
-	if k == 1 {
-		return nums
-	}
-
 	res := make([]int, 0, n-k+1)
-	deque := make([]int, 0, n)
-
+	deque := make([]int, 0)
 	for i := 0; i < n; i++ {
-		if len(deque) > 0 && deque[0] <= i-k {
+		if len(deque) > 0 && deque[0] < i-k+1 {
 			deque = deque[1:]
 		}
-		for len(deque) > 0 && nums[deque[len(deque)-1]] <= nums[i] {
+		for len(deque) > 0 && nums[i] >= nums[deque[len(deque)-1]] {
 			deque = deque[:len(deque)-1]
 		}
 		deque = append(deque, i)
-
 		if i >= k-1 {
 			res = append(res, nums[deque[0]])
 		}
