@@ -8,47 +8,46 @@ import (
 )
 
 func minWindow(s string, t string) string {
-	if len(t) == 0 || len(s) < len(t) {
+	sl := len(s)
+	tl := len(t)
+
+	if tl == 0 || sl < tl {
 		return ""
 	}
 
 	need := make(map[byte]int)
-	for i := 0; i < len(t); i++ {
+	for i := 0; i < tl; i++ {
 		need[t[i]]++
 	}
-
 	win := make(map[byte]int)
-	needKinds := len(need)
 	valid := 0
+	kindsNeed := len(need)
+	bestL, bestLen := 0, sl+1
 	l := 0
-	bestL, bestLen := 0, len(s)+1
-
-	for r := 0; r < len(s); r++ {
-		c := s[r]
+	for i := 0; i < sl; i++ {
+		c := s[i]
 		if _, ok := need[c]; ok {
 			win[c]++
 			if win[c] == need[c] {
 				valid++
 			}
 		}
-
-		for valid == needKinds {
-			if r-l+1 < bestLen {
-				bestLen = r - l + 1
+		for valid == kindsNeed {
+			if i-l+1 < bestLen {
 				bestL = l
+				bestLen = i - l + 1
 			}
 			d := s[l]
+			l++
 			if _, ok := need[d]; ok {
 				if win[d] == need[d] {
 					valid--
 				}
 				win[d]--
 			}
-			l++
 		}
 	}
-
-	if bestLen == len(s)+1 {
+	if bestLen == sl+1 {
 		return ""
 	}
 	return s[bestL : bestL+bestLen]
