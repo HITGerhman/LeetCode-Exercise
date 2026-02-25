@@ -9,25 +9,33 @@ import (
 
 func generateParenthesis(n int) []string {
 	res := []string{}
-	var dfs func(l, r int, path string)
-	dfs = func(l, r int, path string) {
+	var dfs func(l, r int, path []byte)
+	dfs = func(l, r int, path []byte) {
 		if l == n && r == n {
-			res = append(res, path)
+			res = append(res, string(path))
 			return
 		}
 		if l < n {
-			dfs(l+1, r, path+"(")
+			path = append(path, '(')
+			dfs(l+1, r, path)
+			path = path[:len(path)-1] // 回溯：移除刚才添加的字符
 		}
 		if r < l {
-			dfs(l, r+1, path+")")
+			path = append(path, ')')
+			dfs(l, r+1, path)
+			path = path[:len(path)-1] // 回溯
 		}
 	}
-	dfs(0, 0, "")
+	// 预分配容量为 2*n 的切片，避免 append 时扩容
+	dfs(0, 0, make([]byte, 0, 2*n))
 	return res
 }
 
 func main() {
-	f, _ := os.Open("input.txt")
+	f, err := os.Open("input.txt")
+	if err != nil {
+		panic(err)
+	}
 	defer f.Close()
 	in := bufio.NewScanner(f)
 
