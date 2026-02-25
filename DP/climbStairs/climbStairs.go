@@ -11,14 +11,20 @@ func climbStairs(n int) int {
 	if n <= 2 {
 		return n
 	}
-	a, b := 1, 2
+	// 申请 n+1 的空间，以便直接使用 dp[n]
+	dp := make([]int, n+1)
+	dp[1] = 1
+	dp[2] = 2
 	for i := 3; i <= n; i++ {
-		a, b = b, a+b
+		dp[i] = dp[i-1] + dp[i-2]
 	}
-	return b
+	return dp[n]
 }
 func main() {
-	f, _ := os.Open("input.txt")
+	f, err := os.Open("input.txt")
+	if err != nil {
+		panic(err)
+	}
 	defer f.Close()
 	in := bufio.NewScanner(f)
 
