@@ -8,17 +8,20 @@ import (
 )
 
 func lengthOfLongestSubstring(s string) int {
-	last := make(map[byte]int)
+	cnt := make(map[byte]int)
+	n := len(s)
 	l, ans := 0, 0
-	for i := 0; i < len(s); i++ {
+	for i := 0; i < n; i++ {
 		c := s[i]
-		if p, ok := last[c]; ok && p > l {
-			l = p
+		// 如果字符之前出现过，并且出现在当前窗口内（idx >= l），则移动左边界
+		if idx, ok := cnt[c]; ok && idx >= l {
+			l = idx + 1
 		}
+		cnt[c] = i
+		// 更新最大长度
 		if i-l+1 > ans {
 			ans = i - l + 1
 		}
-		last[c] = i + 1
 	}
 	return ans
 }
