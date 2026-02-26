@@ -9,19 +9,18 @@ import (
 
 func subsets(nums []int) [][]int {
 	res := make([][]int, 0)
-	path := make([]int, 0)
+	level := make([]int, 0)
+	n := len(nums)
 
 	var dfs func(start int)
 	dfs = func(start int) {
-		// 每次进入递归，都将当前路径加入结果集（子集包含空集和中间状态）
-		tmp := make([]int, len(path))
-		copy(tmp, path)
-		res = append(res, tmp)
-
-		for i := start; i < len(nums); i++ {
-			path = append(path, nums[i])
+		temp := make([]int, len(level))
+		copy(temp, level)
+		res = append(res, temp)
+		for i := start; i < n; i++ {
+			level = append(level, nums[i])
 			dfs(i + 1)
-			path = path[:len(path)-1]
+			level = level[:len(level)-1]
 		}
 	}
 	dfs(0)
