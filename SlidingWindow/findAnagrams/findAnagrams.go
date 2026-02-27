@@ -10,36 +10,37 @@ import (
 func findAnagrams(s string, p string) []int {
 	sl := len(s)
 	pl := len(p)
-	if pl > sl {
+
+	if pl == 0 || pl > sl {
 		return []int{}
 	}
-	var need, win [26]int
+
+	need := make(map[byte]int)
+	win := make(map[byte]int)
 
 	for i := 0; i < pl; i++ {
-		need[p[i]-'a']++
-		win[s[i]-'a']++
+		win[s[i]]++
+		need[p[i]]++
 	}
 
-	res := make([]int, 0)
-
-	equal := func(a, b *[26]int) bool {
-		for i := 0; i < 26; i++ {
-			if a[i] != b[i] {
+	equal := func(win map[byte]int, need map[byte]int) bool {
+		for k, v := range need {
+			if win[k] != v {
 				return false
 			}
 		}
 		return true
 	}
 
-	if equal(&need, &win) {
+	var res []int
+	if equal(win, need) {
 		res = append(res, 0)
 	}
-
-	for r := pl; r < sl; r++ {
-		win[s[r]-'a']++
-		win[s[r-pl]-'a']--
-		if equal(&need, &win) {
-			res = append(res, r-pl+1)
+	for i := pl; i < sl; i++ {
+		win[s[i]]++    // 右侧字符进窗口
+		win[s[i-pl]]-- // 左侧字符出窗口
+		if equal(win, need) {
+			res = append(res, i-pl+1)
 		}
 	}
 	return res
