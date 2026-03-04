@@ -9,34 +9,45 @@ import (
 )
 
 func restoreIpAddresses(s string) []string {
-	res:=[]string{}
-	n:=len(s)
-	path:=make([]string,0,4)
-	if n<4||n>12 {
+	n := len(s)
+	if n < 4 || n > 12 {
 		return []string{}
 	}
+
+	res := make([]string, 0)
+	path := make([]string, 0, 4)
+
 	var dfs func(start int)
-	dfs=func(start int) {
-		if start==n {
-			if len(path)==4 {
+	dfs = func(start int) {
+		if start == n {
+			if len(path) == 4 {
 				res = append(res, strings.Join(path, "."))
 			}
-		}
-		remainChar:=n-start
-		remainSeg:=n-len(path)
-
-		if remainChar<remainSeg||remainChar>remainSeg*3 {
 			return
 		}
-		val:=0
-		sub:=s[start:start+3]
-		if sub[0]=='0' {
-			return 
+		remainChar := n - start
+		remainSeg := 4 - len(path)
+		if remainChar < remainSeg || remainChar > remainSeg*3 {
+			return
 		}
-		for i:=0;i<3;i++{
-			if 
+		for i := 1; i <= 3; i++ {
+			if start+i > n {
+				break
+			}
+			if i > 1 && s[start] == '0' {
+				break
+			}
+			sub := s[start : start+i]
+			if i == 3 && sub > "255" {
+				break
+			}
+			path = append(path, sub)
+			dfs(start + i)
+			path = path[:len(path)-1]
 		}
 	}
+	dfs(0)
+	return res
 }
 
 func main() {
