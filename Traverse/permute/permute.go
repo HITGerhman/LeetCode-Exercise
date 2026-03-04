@@ -8,30 +8,28 @@ import (
 )
 
 func permute(nums []int) [][]int {
-	res := make([][]int, 0)
-	path := make([]int, 0, len(nums))
+	res := [][]int{}
+	level := []int{}
 	used := make([]bool, len(nums))
 
 	var dfs func()
 	dfs = func() {
-		if len(path) == len(nums) {
-			one := make([]int, len(path))
-			copy(one, path)
-			res = append(res, one)
+		if len(level) == len(nums) {
+			temp := make([]int, len(nums))
+			copy(temp, level)
+			res = append(res, temp)
 			return
 		}
 		for i := 0; i < len(nums); i++ {
-			if used[i] {
-				continue
+			if !used[i] {
+				used[i] = true
+				level = append(level, nums[i])
+				dfs()
+				level = level[:len(level)-1]
+				used[i] = false
 			}
-			used[i] = true
-			path = append(path, nums[i])
-			dfs()
-			path = path[:len(path)-1]
-			used[i] = false
 		}
 	}
-
 	dfs()
 	return res
 }
