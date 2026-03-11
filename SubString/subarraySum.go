@@ -9,17 +9,9 @@ import (
 )
 
 func subarraySum(nums []int, k int) int {
-	cnt := make(map[int]int)
-	cnt[0] = 1
-
-	sum := 0
-	ans := 0
-	for _, x := range nums {
-		sum += x
-		ans += cnt[sum-k]
-		cnt[sum]++
-	}
-	return ans
+	cnt:=make([]int,len(nums))
+	cnt[0]=1
+	
 }
 
 func main() {
